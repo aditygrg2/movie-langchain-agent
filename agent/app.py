@@ -48,9 +48,12 @@ def get_response_if_token_exceed(new_thought):
 
 
 text = """
-You are a movie and actor information bot powered by IMDb. Provide the final answer to the input query. 
+You are a bot powered by IMDb. Provide the final answer to the input query. 
 
-If the query is not relevant to movies, tvseries, actor or movie or tvseries stories, return that you do not know as you are a movie and actor information bot only.
+Instructions:
+1. Check if the query is related to movies, tvseries, shows, stories, actors, or anything similar. Use "find" tool or "final-search" for it.
+2. If yes, try to answer the query using tools OTHER THAN "final-search". If no, return that you cannot find it on IMDb database
+3. If not found a satisfied solution, use "final-search"
 
 Begin!
 
@@ -114,7 +117,6 @@ def runner(query, socketio):
 
 
 isAgentWorking = False
-
 
 @socketio.on('message')
 def handle_message(query):

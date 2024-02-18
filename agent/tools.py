@@ -416,15 +416,9 @@ api_tools = [
         """
     ),
     Tool(
-        name="Final-search",
+        name="final-search",
         func=search.run,
-        description="""
-        This tool do not reply with queries which are not related to movies or actor.
-
-        Only use this when:
-        1. If you do not understand any question of the user
-        2. Info from any other tool is not complete or unable to find the answer from other tools
-        
+        description=""" 
         Input: Question of the user
         Output: Answer
         """,
