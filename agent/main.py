@@ -13,6 +13,7 @@ from flask_app import app
 from flask import jsonify, request
 from langchain_community.utilities import SerpAPIWrapper
 from langchain.prompts import PromptTemplate
+from flask_app import CLIENT_URL
 
 from flask_cors import CORS
 
@@ -49,12 +50,46 @@ def get_response_if_token_exceed(new_thought):
 text = """
 You are a movie and actor information bot powered by IMDb. Provide the final answer to the input query. 
 
-If the query is not relevant to movies or actor, return that you do not know as you are a movie bot and only know information from IMDb database.
+If the query is not relevant to movies, tvseries, actor or movie or tvseries stories, return that you do not know as you are a movie and actor information bot only.
 
 Begin!
 
 Query: \n
 """
+
+
+def search_runner(query):
+    search_results = search.run(query)
+
+    temp = f"""
+    Answer the query from the context.
+
+    If the query is not relevant to movies, tvseries, actor or movie or tvseries stories, return that you do not know as you are a movie bot.
+
+    %INSTRUCTIONS
+    Do not include links or IDs, just the answer.
+
+    %CONTEXT
+    {search_results}
+
+    %QUERY
+    {query}
+
+    Answer:
+    """
+
+    prompt = PromptTemplate(
+        input_variables=["search_results", "query"],
+        template=temp
+    )
+
+    llm_chain = LLMChain(
+        llm=OpenAI(openai_api_key=openai_api_key),
+        prompt=prompt,
+    )
+
+    output = llm_chain.invoke({"search_results": search_results, "query": query})[
+        'text'].strip()
 
 
 def runner(query, socketio):
@@ -64,37 +99,7 @@ def runner(query, socketio):
 
     except Exception as e:
         try:
-            search_results = search.run(query)
-
-            temp = f"""
-            Answer the query from the context.
-
-            If the query is not relevant to movies or actor, return that you do not know as you are a movie bot.
-
-            %INSTRUCTIONS
-            Do not include links or IDs, just the answer.
-
-            %CONTEXT
-            {search_results}
-
-            %QUERY
-            {query}
-
-            Answer:
-            """
-
-            prompt = PromptTemplate(
-                input_variables=["search_results", "query"],
-                template=temp
-            )
-
-            llm_chain = LLMChain(
-                llm=OpenAI(openai_api_key=openai_api_key),
-                prompt=prompt,
-            )
-
-            output = llm_chain.invoke({"search_results": search_results, "query": query})[
-                'text'].strip()
+            output = search_runner(query)
 
         except Exception as new_exception:
             output = get_response_if_token_exceed(new_thought)
@@ -102,15 +107,26 @@ def runner(query, socketio):
     if ((not output) or (len(output) == 0)):
         return "Sorry, I couldn't find any relevant data for this query. Please try again!"
 
+    if (output.startswith("Agent stopped")):
+        return search_runner(query)
+
     return output
+
+
+isAgentWorking = False
 
 
 @socketio.on('message')
 def handle_message(query):
-    print(query)
-    output = runner(query, socketio)
-
-    socketio.emit("final_answer", output)
+    global isAgentWorking
+    print(query, isAgentWorking)
+    if (not isAgentWorking):
+        isAgentWorking = True
+        output = runner(query, socketio)
+        socketio.emit("final_answer", output)
+        isAgentWorking = False
+    else:
+        socketio.emit("final_answer", "Agent is currently busy!")
 
 
 @app.route('/', methods=["GET"])

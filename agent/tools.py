@@ -425,8 +425,8 @@ api_tools = [
         1. If you do not understand any question of the user
         2. Info from any other tool is not complete or unable to find the answer from other tools
         
-        Input: Query of the user
-        Output: Possible answer to the query
+        Input: Question of the user
+        Output: Answer
         """,
     )
 ]

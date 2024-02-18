@@ -5,7 +5,7 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 import { xt256 } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import _ from "lodash";
 import { agentStatus } from "./App";
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion";
 
 const status_color_map = {
   1: "green",
@@ -19,23 +19,23 @@ const status_text_map = {
   3: "Working",
 };
 
-const CodeEditor = React.forwardRef(({
+const CodeEditor = ({
   socket,
   setLogs,
   logs,
   setAnswer,
   status,
   setStatus,
-  ref
+  setQuery,
 }) => {
   const [code, setCode] = useState("");
   const [toggleLogs, setToggleLogs] = useState(false);
 
   useEffect(() => {
-    if(status === agentStatus.WORKING){
+    if (status === agentStatus.WORKING) {
       setToggleLogs(true);
     }
-  }, [status])
+  }, [status]);
 
   useEffect(() => {
     setCode(JSON.stringify(logs, null, 2));
@@ -49,8 +49,6 @@ const CodeEditor = React.forwardRef(({
     });
 
     socket.on("final_answer", (ans) => {
-      clearTimeout(ref);
-
       setLogs((prev_logs) => [
         ...prev_logs,
         {
@@ -70,6 +68,8 @@ const CodeEditor = React.forwardRef(({
       } else {
         setStatus(agentStatus.OFFLINE);
       }
+
+      setToggleLogs(false);
     });
   }, []);
 
@@ -89,20 +89,19 @@ const CodeEditor = React.forwardRef(({
   };
 
   const handleToggleLogs = () => {
-    setToggleLogs((t) => !t)
-  }
+    setToggleLogs((t) => !t);
+  };
 
   return (
-    <div className="bg-black bg-opacity-75 rounded-lg mt-6 flex flex-col overflow-scroll min-h-fit">
-      <div className="flex justify-between text-xs text-gray-400 p-4">
+    <div className="bg-black bg-opacity-75 rounded-lg mt-6 flex flex-col overflow-scroll max-h-80">
+      <div className="flex justify-between text-xs text-gray-400 p-4 sticky">
         <div className="flex gap-x-2">
           {!toggleLogs ? (
             <BsArrowUpCircleFill
               size={16}
               className="z-2 fill-slate-100 inline"
               onClick={handleToggleLogs}
-            >
-            </BsArrowUpCircleFill>
+            ></BsArrowUpCircleFill>
           ) : (
             <BsArrowDownCircleFill
               size={16}
@@ -123,32 +122,32 @@ const CodeEditor = React.forwardRef(({
           </span>
         </div>
       </div>
-        
+
       <AnimatePresence>
-      {toggleLogs && (
-        <motion.div
-        key="toggle"
-        initial={{ height: "0%" }}
-        animate={{ height: "auto" }}
-        exit={{ height: 0 }}
-        transition={{duration: 0.2}}
-        >
-        <SyntaxHighlighter
-          language="javascript"
-          style={xt256}
-          showLineNumbers={true}
-          className={
-            "flex flex-col grow text-sm leading-tight bg-black rounded-lg p-2 m-2"
-          }
-          wrapLines={true}
-        >
-          {code}
-        </SyntaxHighlighter>
-        </motion.div>
-      )}
+        {toggleLogs && (
+          <motion.div
+            key="toggle"
+            initial={{ height: 0 }}
+            animate={{ height: "auto" }}
+            exit={{ height: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <SyntaxHighlighter
+              language="javascript"
+              style={xt256}
+              showLineNumbers={true}
+              className={
+                "flex flex-col grow text-sm leading-tight bg-black rounded-lg p-2 m-2"
+              }
+              wrapLines={true}
+            >
+              {code}
+            </SyntaxHighlighter>
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );
-});
+};
 
 export default CodeEditor;
