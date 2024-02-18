@@ -6,6 +6,6 @@ import io from "socket.io-client";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
-const socket = io("ws://llm-agent.onrender.com");
+const socket = io("wss://llm-agent.onrender.com");
 
 root.render(<App socket={socket} />);
