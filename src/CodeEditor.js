@@ -63,7 +63,7 @@ const CodeEditor = ({
         };
       });
 
-      if (socket.connected) {
+      if (socket && socket.connected) {
         setStatus(agentStatus.LIVE);
       } else {
         setStatus(agentStatus.OFFLINE);

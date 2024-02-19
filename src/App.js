@@ -65,8 +65,8 @@ const App = ({ socket }) => {
   }, []);
 
   const handleQuery = () => {
-    const q = inputRef.current.value;
-    if (status === agentStatus.LIVE && q.length > 0) {
+    const q = inputRef?.current?.value;
+    if (status === agentStatus.LIVE && q && q.length > 0) {
       setQuery(q);
       setAnswer({ answer: "", image: "" });
 
@@ -145,7 +145,7 @@ const App = ({ socket }) => {
         </div>
 
         <AnimatePresence>
-          {query.length > 0 && (
+          {query && query.length > 0 && (
             <motion.div
               key="query"
               initial={{ height: 0 }}
@@ -155,7 +155,7 @@ const App = ({ socket }) => {
             >
               <div className="space-y-4">
                 <p className="font-bold text-lg text-center">{query}</p>
-                {answer["answer"].length <= 0 && (
+                {answer["answer"] && answer["answer"].length <= 0 && (
                   <div
                     className={
                       "text-center flex items-center justify-center p-2 text-lg font-semibold text-wrap select-all selection:bg-yellow-300 selection:text-black"
@@ -174,7 +174,7 @@ const App = ({ socket }) => {
                       transition={{ duration: 0.5 }}
                       className="flex"
                     >
-                      {answer["answer"].length > 0 && (
+                      {answer["answer"] && answer["answer"].length > 0 && (
                         <div
                           className={
                             "text-center flex items-center justify-center p-2 text-lg font-semibold text-wrap select-all selection:bg-yellow-300 selection:text-black w-[70%]"
@@ -183,7 +183,7 @@ const App = ({ socket }) => {
                           {answer["answer"]}
                         </div>
                       )}
-                      {answer["answer"].length > 0 && answer["image"].length > 0 && (
+                      {answer["answer"] && answer["image"] && answer["answer"].length > 0 && answer["image"]?.length > 0 && (
                         <div className="flex justify-center items-center grow">
                           <img className="max-h-60 max-w-60" src={answer['image']}></img>
                         </div>
