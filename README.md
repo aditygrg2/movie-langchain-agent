@@ -22,12 +22,12 @@ The main core idea of the ReAct agent is to take action on any reasoning that wa
 *Sample Query in the Cinematica Agent*
 
 1. The agent first thinks what it needs to do, and tries to search IMDb if the relevant query is present.
-2. Once he founds the movie or actor or anything related, he fetches the ID and keeps it to query another APIs.
+2. Once he finds the movie or actor or anything related, he fetches the ID and keeps it to query another API.
 
 Let's ask a little hard question -
 
 ```{
-    "query": "Who is gwen stacy in the movie the amazing spiderman 2?"
+    "query": "Who is Gwen Stacy in the movie The Amazing Spiderman 2?"
   },
   {
     "tool": "find",
@@ -41,10 +41,10 @@ Let's ask a little hard question -
   },
   {
     "tool": "_Exception",
-    "log": "The character Gwen Stacy in the movie \"The Amazing Spider-Man 2\" is played by Emma Stone. Emma Stone was born on November 6, 1988 in Scottsdale, Arizona, USA. She is known for her bright emerald green eyes, distinctive husky voice, and red hair. She is married to Dave McCary and has one child."
+    "log": "The character Gwen Stacy in the movie \"The Amazing Spider-Man 2\" is played by Emma Stone. Emma Stone was born on November 6, 1988, in Scottsdale, Arizona, USA. She is known for her bright emerald green eyes, distinctive husky voice, and red hair. She is married to Dave McCary and has one child."
   },
   {
-    "response": "Gwen Stacy in the movie \"The Amazing Spider-Man 2\" is played by Emma Stone. Emma Stone was born on November 6, 1988 in Scottsdale, Arizona, USA. She is known for her bright emerald green eyes, distinctive husky voice, and red hair. She is married to Dave McCary and has one child."
+    "response": "Gwen Stacy in the movie \"The Amazing Spider-Man 2\" is played by Emma Stone. Emma Stone was born on November 6, 1988, in Scottsdale, Arizona, USA. She is known for her bright emerald green eyes, distinctive husky voice, and red hair. She is married to Dave McCary and has one child."
   }
 ```
 
@@ -54,13 +54,15 @@ The agent follows a beautiful trajectory to fetch the results.
 3. Uses the details of the movie to find the details about the actor
 4. Return the response from finding details.
 
+The prompts and the code for this are discussed in the file `agent/app.py`
+
 All these tools are defined in the file `agent/tools.py`
 
 ### Technologies Used
 1. Backend:
-- Flask: A micro web framework for Python.
+- Flask: A micro web framework for Python. Defined in `agent/flask_app.py`
 - Sockets: For communication between client and server.
-- Gunicorn: A WSGI HTTP server for running Python web applications.
+- Gunicorn: A WSGI HTTP server for running Python web applications. Configurations defined in `gunicorn_config.py`
 2. Frontend:
 - React
 3. LLM:
@@ -70,22 +72,25 @@ All these tools are defined in the file `agent/tools.py`
 
 #### Backend:
 
-Add the following code with the API keys to the .env file and add it to the agent foler.
-`
+Install all the dependencies using `pip install -r requirements.txt`  
+
+Add the following code with the API keys to the .env file and add it to the agent folder.  
+
+```
 openai_api_key=
 serpapi_api_key=
 X-RapidAPI-Key=
-`
+```
 
-Run `gunicorn --config gunicorn_config.py app:app` to start the backend on port 5000.
+Run `gunicorn --config gunicorn_config.py app:app` to start the backend on port 5000.  
 
 #### Frontend:
 
-In the project directory, you can run:
+In the project directory, you can run:  
 
 ### `npm install`
 
-For installing all the directories
+For installing all the directories  
 
 ### `npm start`
 
