@@ -25,7 +25,7 @@ The main core idea of the ReAct agent is to take action on any reasoning that wa
 1. The agent first thinks what it needs to do, and tries to search IMDb if the relevant query is present.
 2. Once he finds the movie or actor or anything related, he fetches the ID and keeps it to query another API.
 
-Let's ask a little hard question -
+Let's try something else -
 
 ```{
     "query": "Who is Gwen Stacy in the movie The Amazing Spiderman 2?"
@@ -54,6 +54,40 @@ The agent follows a beautiful trajectory to fetch the results.
 2. He beautifully makes a distinction between the movie and the character
 3. Uses the details of the movie to find the details about the actor
 4. Return the response from finding details.
+
+What if IMDb does not have particular data?
+
+```{
+    "query": "PLease list me all abuse words used in Animal movie, list them word by word"
+  },
+  {
+    "tool": "find",
+    "tool_input": "Animal",
+    "log": "We need to find the ID of the movie \"Animal\" first to get the information about the abuse words used in the movie.\\nAction: find\\nAction Input: Animal"
+  },
+  {
+    "tool": "get-details-title",
+    "tool_input": "tt13751694",
+    "log": "We have found the ID for the movie \"Animal\". Now we can get the details of the movie to find the abuse words used.\\nAction: get-details-title\\nAction Input: tt13751694"
+  },
+  {
+    "tool": "_Exception",
+    "tool_input": "Invalid or incomplete response",
+    "log": "Parsing LLM output produced both a final answer and a parse-able action:: We have the details of the movie \"Animal\", but we need to find the specific information about the abuse words used in the movie.\\nAction: final-search\\nAction Input: List of abuse words used in the movie \"Animal\"\\nFinal Answer: The list of abuse words used in the movie \"Animal\" is not available on IMDb database."
+  },
+  {
+    "tool": "_Exception",
+    "tool_input": "Invalid or incomplete response",
+    "log": "Parsing LLM output produced both a final answer and a parse-able action:: We were unable to find the list of abuse words used in the movie \"Animal\" on IMDb. Let\\"
+  },
+  {
+    "response": "The list of abuse words used in the movie \"Animal\" is not available on IMDb."
+  }
+```
+
+It fallbacks nicely.
+
+**Note:** Due to the free OpenAI API, the tokens are limited to first 1800 defined in `app.py` file. So some results might have little mismatched information. But amazingly it still give nice results.
 
 The prompts and the code for this are discussed in the file `agent/app.py`
 
@@ -92,7 +126,7 @@ Run `gunicorn --config gunicorn_config.py app:app` to start the backend on port 
 
 ## More prompts -
 
-`{
+```{
     "query": "Please list at least 4 lines about the movie Homelander?"
   },
   {
@@ -139,11 +173,11 @@ Run `gunicorn --config gunicorn_config.py app:app` to start the backend on port 
   {
     "response": "The superheroes in the series 'The Boys' are Billy Butcher, Hughie Campbell, and Homelander."
   }
-`
+```
 
 Uses almost perfect routes! The responses from the API are not visible here, but they will be visible when you run the code locally.
 
-`{
+```{
     "query": "Spiderman Across the Spiderverse have how many spidermans?"
   },
   {
@@ -164,7 +198,7 @@ Uses almost perfect routes! The responses from the API are not visible here, but
   {
     "response": "The movie \"Spiderman Across the Spiderverse\" includes 280 variations of Spider-Man, with 95 of them being unique and named characters."
   }
-`
+```
 
 Fetches wrong results, but then try to improve.
 
