@@ -6,7 +6,7 @@ Link to the deployed version: https://movie-langchain-agent.vercel.app
 
 <img width="1535" alt="diagram" src="https://github.com/aditygrg2/movie-langchain-agent/assets/98523623/377cb1cf-9447-4b79-925f-255355bf6084">
 
-Source of Image: https://react-lm.github.io\
+Source of Image: https://react-lm.github.io   
 Source of API: https://rapidapi.com/apidojo/api/imdb8
 
 ## How it works?
