@@ -70,7 +70,7 @@ All these tools are defined in the file `agent/tools.py`
 
 ## How to use - 
 
-#### Backend:
+### Backend:
 
 Install all the dependencies using `pip install -r requirements.txt`  
 
@@ -84,18 +84,89 @@ X-RapidAPI-Key=
 
 Run `gunicorn --config gunicorn_config.py app:app` to start the backend on port 5000.  
 
-#### Frontend:
+### Frontend:
 
-In the project directory, you can run:  
+- Run `npm install` to install the libraries used in the project.
+- Run `npm run start` to start the frontend on port 3000.
 
-### `npm install`
+## More prompts -
 
-For installing all the directories  
+`{
+    "query": "Please list at least 4 lines about the movie Homelander?"
+  },
+  {
+    "tool": "find",
+    "tool_input": "Homelander",
+    "log": "We need to find the IMDb ID for the movie \"Homelander\" first.\\nAction: find\\nAction Input: Homelander"
+  },
+  {
+    "tool": "final-search",
+    "tool_input": "Please list at least 4 lines about the movie Homelander",
+    "log": "The movie \"Homelander\" does not have a specific IMDb ID. We will need to use the \"final-search\" tool to find more information about it.\\n\\nAction: final-search\\nAction Input: Please list at least 4 lines about the movie Homelander"
+  },
+  {
+    "response": "Here are some details about the movie \"Homelander\":\n- Homelander thinks of himself and every other superhero as a different species. He doesn't believe that ordinary people are worthy.\n- Homelander has some memorable quotes, such as \"I'm stronger, I'm smarter, I'm better! I AM BETTER!\" and \"No God. The only man in the sky is me.\"\n- Homelander is a complex character with several quotes that sum up his personality.\n- Homelander, with the face of a movie star and the powers of a god, is considered the greatest superhero alive."
+  },
+  {
+    "query": "List me the names of all the superheroes in the series 'The Boys'"
+  },
+  {
+    "tool": "find",
+    "tool_input": "The Boys",
+    "log": "I should use the \"find\" tool to get the ID of the series \\"
+  },
+  {
+    "tool": "get-top-cast",
+    "tool_input": "tt1190634",
+    "log": "I should now use the \"get-top-cast\" tool to determine the top cast of the series \\"
+  },
+  {
+    "tool": "get-bio",
+    "tool_input": "nm0881631",
+    "log": "I should now use the \"get-bio\" tool to get more information about the actors in the series \\"
+  },
+  {
+    "tool": "get-bio",
+    "tool_input": "nm4425051",
+    "log": "I should now use the \"get-bio\" tool to get more information about the other actors in the series \\"
+  },
+  {
+    "tool": "get-bio",
+    "tool_input": "nm1102278",
+    "log": "I should now use the \"get-bio\" tool to get more information about the other actors in the series \\"
+  },
+  {
+    "response": "The superheroes in the series 'The Boys' are Billy Butcher, Hughie Campbell, and Homelander."
+  }
+`
 
-### `npm start`
+Uses almost perfect routes! The responses from the API are not visible here, but they will be visible when you run the code locally.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+`{
+    "query": "Spiderman Across the Spiderverse have how many spidermans?"
+  },
+  {
+    "tool": "find",
+    "tool_input": "Spiderman Across the Spiderverse",
+    "log": "We need to find the ID of the movie \"Spiderman Across the Spiderverse\" first to gather more information about it.\\nAction: find\\nAction Input: Spiderman Across the Spiderverse"
+  },
+  {
+    "tool": "get-details-title",
+    "tool_input": "tt29003913",
+    "log": "We have found the ID for the movie \"Spiderman Across the Spiderverse.\" Now, let\\"
+  },
+  {
+    "tool": "final-search",
+    "tool_input": "How many Spidermans are in the movie \"Spiderman Across the Spiderverse\"?",
+    "log": "The movie \"Spiderman Across the Spiderverse\" has a running time of 12 minutes. It seems to be a podcast episode rather than a movie. Let\\"
+  },
+  {
+    "response": "The movie \"Spiderman Across the Spiderverse\" includes 280 variations of Spider-Man, with 95 of them being unique and named characters."
+  }
+`
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Fetches wrong results, but then try to improve.
+
+Do your hands dirty too. Try it here: https://movie-langchain-agent.vercel.app/
+
+
