@@ -1,8 +1,25 @@
-# Getting Started with Create React App
+# Movie Agent for calling IMDb APIs by using Langchain ReAct agent
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is made using Langchain 'ReAct' agent for function calling different API's for receiving the data from IMDb.
 
-## Available Scripts
+Link to the deployed version: https://movie-langchain-agent.vercel.app
+
+<img width="1535" alt="diagram" src="https://github.com/aditygrg2/movie-langchain-agent/assets/98523623/377cb1cf-9447-4b79-925f-255355bf6084">
+
+Source of Image: https://react-lm.github.io
+Source of API: https://rapidapi.com/apidojo/api/imdb8
+
+## How it works?
+
+<img width="1371" alt="hotpotqa" src="https://github.com/aditygrg2/movie-langchain-agent/assets/98523623/125f402c-9dcd-4008-9592-01d49a909dfe">
+
+*A sample query of ReAct Agent*
+
+The main core idea of the ReAct agent is to take action on any reasoning which was provided earlier as visible on the query above.
+
+
+
+
 
 In the project directory, you can run:
 
