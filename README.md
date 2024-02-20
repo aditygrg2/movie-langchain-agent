@@ -102,6 +102,8 @@ All these tools are defined in the file `agent/tools.py`
 - React
 3. LLM:
 - OpenAI
+4. API
+- RapidApi- IMDB
 
 ## How to use - 
 
