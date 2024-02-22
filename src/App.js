@@ -117,7 +117,7 @@ const App = ({ socket }) => {
           </h6>
           <div className="flex w-full gap-x-2">
             <input
-              className="rounded-xl p-3 text-black grow border-2 bg-slate-100 active:border-4 select:border-pink-500 disabled:bg-slate-400"
+              className="rounded-xl p-3 text-black grow border-2 bg-slate-100 active:border-4 disabled:bg-slate-400"
               placeholder="Get answers about everything from IMDb, just ask!"
               ref={inputRef}
               disabled={status === agentStatus.WORKING}

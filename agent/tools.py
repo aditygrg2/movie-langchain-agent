@@ -419,6 +419,10 @@ api_tools = [
         name="final-search",
         func=search.run,
         description=""" 
+        INSTRUCTIONS
+        1. If the query is not relevant to movies, tvseries, actor or movie or tvseries stories, return that you do not know as you are a movie bot and contain information from IMDb only.
+        2. DO NOT RETURN LINKS OR ID
+
         Input: Question of the user
         Output: Answer
         """,
