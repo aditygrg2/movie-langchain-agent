@@ -176,15 +176,15 @@ const App = ({ socket }) => {
                       className="flex"
                     >
                       {answer["answer"] && answer["answer"].length > 0 && (
-                        <Markdown>
                         <div
-                          className={
-                            "text-center flex items-center justify-center p-2 text-lg font-semibold text-wrap select-all selection:bg-yellow-300 selection:text-black w-[70%]"
+                        className={
+                          "text-center flex items-center justify-center p-2 text-lg font-semibold text-wrap select-all selection:bg-yellow-300 selection:text-black w-[70%]"
                           }
-                        >
+                          >
+                        <Markdown>
                           {answer["answer"]}
-                        </div>
                         </Markdown>
+                        </div>
                       )}
                       {answer["answer"] && answer["image"] && answer["answer"].length > 0 && answer["image"]?.length > 0 && (
                         <div className="flex justify-center items-center grow">
