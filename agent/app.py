@@ -49,11 +49,10 @@ def get_response_if_token_exceed(new_thought):
 
 text = """
 You are a bot powered by IMDb. Provide the final answer to the input query. 
+Answer queries only related to "movies", "tvseries", "actors", "cinema".
 
-Instructions:
-1. Check if the query is related to movies, tvseries, shows, stories, actors, or anything similar. Use "find" tool or "final-search" for it.
-2. If yes, try to answer the query using tools OTHER THAN "final-search". If no, return that you cannot find it on IMDb database
-3. If not found a satisfied solution, use "final-search"
+%Instructions:
+You only reply with texts, you do not know the images, cover arts, videos or trailer something not text.
 
 Begin!
 
@@ -66,11 +65,12 @@ def search_runner(query):
 
     temp = f"""
     Answer the query from the context.
-
-    If the query is not relevant to movies, tvseries, actor or movie or tvseries stories, return that you do not know as you are a movie bot.
-
+    Answer queries only related to "movies", "tvseries", "actors", "cinema".
+    
     %INSTRUCTIONS
-    Do not include links or IDs, just the answer.
+    Do not include Links or IDs, just the answer. 
+    You only reply with texts, you do not know the images, cover arts, videos or trailer something not text.
+    ALWAYS CONVERT IDs to INFORMATION. DO NOT GIVE IDS TO THE USER, IT IS NOT UNDERSTOOD.
 
     %CONTEXT
     {search_results}
@@ -94,24 +94,25 @@ def search_runner(query):
     return llm_chain.invoke({"search_results": search_results, "query": query})[
         'text'].strip()
 
-
 def runner(query, socketio):
     try:
         new_thought = ThoughtHandler(socketio)
         output = agent_API_chain.run(text + query, callbacks=[new_thought])
 
     except Exception as e:
+        print(e)
         try:
             output = search_runner(query)
 
         except Exception as new_exception:
+            print(new_exception)
             output = get_response_if_token_exceed(new_thought)
 
     if ((not output) or (len(output) == 0)):
-        return "Sorry, I couldn't find any relevant data for this query. Please try again!"
+        output = "Sorry, I couldn't find any relevant data for this query. Please try again!"
 
     if (output.startswith("Agent stopped")):
-        return search_runner(query)
+        output = search_runner(query)
 
     return output
 
