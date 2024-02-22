@@ -91,7 +91,7 @@ def search_runner(query):
         prompt=prompt,
     )
 
-    output = llm_chain.invoke({"search_results": search_results, "query": query})[
+    return llm_chain.invoke({"search_results": search_results, "query": query})[
         'text'].strip()
 
 
