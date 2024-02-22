@@ -210,7 +210,7 @@ api_tools = [
         This can be used to determing most popular celebs/actors. 
         Use this only specifically needed.
 
-        Input: None
+        Input: ""
         Output: JSON containing IDs of most popular celebs. Search these IDs with "find" for more details.
         """
     ),
@@ -221,7 +221,7 @@ api_tools = [
         This can be used to determing most popular movies. 
         Use this only specifically needed.
 
-        Input: None
+        Input: ""
         Output: JSON containing IDs of most popular movies titles. Search these IDs with "find" for more details.
         """
     ),
@@ -231,7 +231,7 @@ api_tools = [
         description="""        
         This can be used to determing most popular tv shows. Use this only specifically needed.
 
-        Input: None
+        Input: ""
         Output: JSON containing IDs of most popular tvseries titles. Search these IDs with "find" for more details.
         """
     ),
@@ -365,7 +365,7 @@ api_tools = [
         description="""
         This can be used to determine the coming soon TV movies.
         
-        Input: None
+        Input: ""
         Output: JSON containing the IDs of the coming soon movie or tvseries title with their release date.
         """
     ),
@@ -375,7 +375,7 @@ api_tools = [
         description="""
         This can be used to determine the coming soon TV shows.
 
-        Input: None
+        Input: ""
         Output: JSON containing the IDs of the coming soon TV Shows with their release date.
         """
     ),
@@ -419,8 +419,11 @@ api_tools = [
         name="final-search",
         func=search.run,
         description=""" 
-        Look for answer here, if not found using any other tool. 
+        Look for answer here, only if not found using any other tool. 
+        
+        ``
         Only movie, tvseries, actor related inputs are allowed.
+        ``
 
 
         INSTRUCTIONS

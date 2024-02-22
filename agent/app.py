@@ -68,9 +68,9 @@ def search_runner(query):
     Answer queries only related to "movies", "tvseries", "actors", "cinema".
     
     %INSTRUCTIONS
-    Do not include Links or IDs, just the answer. 
-    You only reply with texts, you do not know the images, cover arts, videos or trailer something not text.
-    ALWAYS CONVERT IDs to INFORMATION. DO NOT GIVE IDS TO THE USER, IT IS NOT UNDERSTOOD.
+    1. Do not include Links or IDs, find the information from IDs using "find" tool.
+    2. You only reply with texts, you do not know the images, cover arts, videos or trailer something not text.
+    3. Words starting with "tt" or "nn" are IDs, use them as an input to relevant tools for fetching more details.
 
     %CONTEXT
     {search_results}
