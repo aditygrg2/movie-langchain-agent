@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { PiFilmSlateBold } from "react-icons/pi";
 import Markdown from "react-markdown";
 import axios from "axios";
-import {SERVER_URL} from 'index'
+import {SERVER_URL} from './index'
 
 export const agentStatus = {
   LIVE: 1,
