@@ -294,9 +294,6 @@ const App = ({ socket }) => {
           setQuery={setQuery}
         />
       )}
-        <p className="text-center text-white font-bold text-xl p-2 absolute bottom-2 left-1/2 -translate-x-1/2">
-          Logs and images will only appear via sockets.
-        </p>
     </div>
   );
 };
