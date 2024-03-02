@@ -415,20 +415,20 @@ api_tools = [
         Output: JSON containing the plots information of the movie or tvseries title
         """
     ),
-    Tool(
-        name="final-search",
-        func=search.run,
-        description=""" 
-        Look for answer here, only if not found using any other tool. 
+    # Tool(
+    #     name="final-search",
+    #     func=search.run,
+    #     description=""" 
+    #     Look for answer here, only if not found using any other tool. 
         
-        ``
-        Only movie, tvseries, actor related inputs are allowed.
-        ``
+    #     ``
+    #     Only movie, tvseries, actor related inputs are allowed.
+    #     ``
 
 
-        INSTRUCTIONS
-        Input: Question of the user
-        Output: Answer
-        """,
-    )
+    #     INSTRUCTIONS
+    #     Input: Question of the user
+    #     Output: Answer
+    #     """,
+    # )
 ]

@@ -4,13 +4,17 @@ import _ from "lodash";
 import { RiMovie2Fill } from "react-icons/ri";
 import { motion, AnimatePresence } from "framer-motion";
 import { PiFilmSlateBold } from "react-icons/pi";
-import Markdown from 'react-markdown'
+import Markdown from "react-markdown";
+import axios from "axios";
+import {SERVER_URL} from 'index'
 
 export const agentStatus = {
   LIVE: 1,
   OFFLINE: 2,
   WORKING: 3,
 };
+
+axios.defaults.timeout = 1000000;
 
 const App = ({ socket }) => {
   const inputRef = useRef();
@@ -67,13 +71,47 @@ const App = ({ socket }) => {
 
   const handleQuery = () => {
     const q = inputRef?.current?.value;
+
     if (status === agentStatus.LIVE && q && q.length > 0) {
       setQuery(q);
       setAnswer({ answer: "", image: "" });
 
-      socket.emit("message", q);
+      axios
+        .post(`https://${SERVER_URL}/get_response`, {
+          query: q,
+        })
+        .then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            setAnswer((prev_ans) => {
+              return {
+                ...prev_ans,
+                answer: response["data"]["ans"],
+              };
+            });
+
+            if (socket && socket.connected) {
+              setStatus(agentStatus.LIVE);
+            } else {
+              setStatus(agentStatus.OFFLINE);
+            }
+          } else {
+            setAnswer({
+              answer:
+                "We are trying to connect to agent. Please try again once we are up! Sorry for the inconvenience.",
+              image:
+                "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/9d8aad33437265.5ba16b3b9472c.jpg",
+            });
+          }
+        }).then(() => {
+          if (socket && socket.connected) {
+            setStatus(agentStatus.LIVE);
+          } else {
+            setStatus(agentStatus.OFFLINE);
+          }
+        });
 
       setStatus(agentStatus.WORKING);
+
       setLogs((prev_logs) => [
         ...prev_logs,
         {
@@ -84,13 +122,50 @@ const App = ({ socket }) => {
       inputRef.current.value = "";
     } else if (status === agentStatus.WORKING) {
     } else {
+      // setQuery("The logs will not support in this stage.");
+      // setAnswer({
+      //   answer:
+      //     "We are trying to connect to agent. Please try again once we are up! Sorry for the inconvenience.",
+      //   image:
+      //     "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/9d8aad33437265.5ba16b3b9472c.jpg",
+      // });
       setQuery(q);
-      setAnswer({
-        answer:
-          "We are trying to connect to agent. Please try again once we are up! Sorry for the inconvenience.",
-        image:
-          "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/9d8aad33437265.5ba16b3b9472c.jpg",
-      });
+
+      axios
+        .post(`https://${SERVER_URL}/get_response`, {
+          query: q,
+        })
+        .then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            setAnswer((prev_ans) => {
+              return {
+                ...prev_ans,
+                answer: response["data"]["ans"],
+              };
+            });
+
+            if (socket && socket.connected) {
+              setStatus(agentStatus.LIVE);
+            } else {
+              setStatus(agentStatus.OFFLINE);
+            }
+          } else {
+            setAnswer({
+              answer:
+                "We are trying to connect to agent. Please try again once we are up! Sorry for the inconvenience.",
+              image:
+                "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/9d8aad33437265.5ba16b3b9472c.jpg",
+            });
+          }
+        }).then(() => {
+          if (socket && socket.connected) {
+            setStatus(agentStatus.LIVE);
+          } else {
+            setStatus(agentStatus.OFFLINE);
+          }
+        });
+
+        setStatus(agentStatus.WORKING);
     }
   };
 
@@ -98,7 +173,10 @@ const App = ({ socket }) => {
     <div className="mx-auto p-6 bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500 text-white w-screen min-h-screen flex flex-col">
       <div className="bg-black bg-opacity-50 rounded-lg p-4 flex flex-col">
         <div className="flex justify-between items-center mb-4">
-          <div className="text-3xl antialiased hover:subpixel-antialiased"><PiFilmSlateBold className="inline p-1 hover:fill-pink-500"></PiFilmSlateBold>Cinematica</div>
+          <div className="text-3xl antialiased hover:subpixel-antialiased">
+            <PiFilmSlateBold className="inline p-1 hover:fill-pink-500"></PiFilmSlateBold>
+            Cinematica
+          </div>
           <div className="text-sm">
             <a
               target="_blank"
@@ -112,7 +190,9 @@ const App = ({ socket }) => {
         </div>
 
         <div className="flex flex-col justify-center m-10 gap-y-2">
-          <h1 className="text-3xl font-bold text-start antialiased pb-4">Ask me about movies, actors or anything from IMDb powered by LLM</h1>
+          <h1 className="text-3xl font-bold text-start antialiased pb-4">
+            Ask me about movies, actors or anything from IMDb powered by LLM
+          </h1>
           <h6 className="text-md text-slate-200 text-start">
             How much money did Avengers Endgame made?
           </h6>
@@ -177,20 +257,24 @@ const App = ({ socket }) => {
                     >
                       {answer["answer"] && answer["answer"].length > 0 && (
                         <div
-                        className={
-                          "text-center flex items-center justify-center p-2 text-lg font-semibold text-wrap select-all selection:bg-yellow-300 selection:text-black w-[70%]"
+                          className={
+                            "text-center flex items-center justify-center p-2 text-lg font-semibold text-wrap select-all selection:bg-yellow-300 selection:text-black w-[70%]"
                           }
-                          >
-                        <Markdown>
-                          {answer["answer"]}
-                        </Markdown>
+                        >
+                          <Markdown>{answer["answer"]}</Markdown>
                         </div>
                       )}
-                      {answer["answer"] && answer["image"] && answer["answer"].length > 0 && answer["image"]?.length > 0 && (
-                        <div className="flex justify-center items-center grow">
-                          <img className="max-h-60 max-w-60" src={answer['image']}></img>
-                        </div>
-                      )}
+                      {answer["answer"] &&
+                        answer["image"] &&
+                        answer["answer"].length > 0 &&
+                        answer["image"]?.length > 0 && (
+                          <div className="flex justify-center items-center grow">
+                            <img
+                              className="max-h-60 max-w-60"
+                              src={answer["image"]}
+                            ></img>
+                          </div>
+                        )}
                     </motion.div>
                   }
                 </AnimatePresence>
@@ -199,15 +283,20 @@ const App = ({ socket }) => {
           )}
         </AnimatePresence>
       </div>
-      <CodeEditor
-        socket={socket}
-        setLogs={setLogs}
-        logs={logs}
-        setAnswer={setAnswer}
-        status={status}
-        setStatus={setStatus}
-        setQuery={setQuery}
-      />
+      {socket && socket.connected && (
+        <CodeEditor
+          socket={socket}
+          setLogs={setLogs}
+          logs={logs}
+          setAnswer={setAnswer}
+          status={status}
+          setStatus={setStatus}
+          setQuery={setQuery}
+        />
+      )}
+        <p className="text-center text-white font-bold text-xl p-2 absolute bottom-2 left-1/2 -translate-x-1/2">
+          Logs and images will only appear via sockets.
+        </p>
     </div>
   );
 };

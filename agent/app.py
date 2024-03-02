@@ -15,8 +15,6 @@ from langchain_community.utilities import SerpAPIWrapper
 from langchain.prompts import PromptTemplate
 from flask_app import CLIENT_URL
 
-from flask_cors import CORS
-
 load_dotenv()
 openai_api_key = os.environ['openai_api_key']
 serpapi_api_key = os.environ['serpapi_api_key']
@@ -117,19 +115,19 @@ def runner(query, socketio):
     return output
 
 
-isAgentWorking = False
+# isAgentWorking = False
 
-@socketio.on('message')
-def handle_message(query):
-    global isAgentWorking
-    print(query, isAgentWorking)
-    if (not isAgentWorking):
-        isAgentWorking = True
-        output = runner(query, socketio)
-        socketio.emit("final_answer", output)
-        isAgentWorking = False
-    else:
-        socketio.emit("final_answer", "Agent is currently busy!")
+# @socketio.on('message')
+# def handle_message(query):
+#     global isAgentWorking
+#     print(query, isAgentWorking)
+#     if (not isAgentWorking):
+#         isAgentWorking = True
+#         output = runner(query, socketio)
+#         socketio.emit("final_answer", output)
+#         isAgentWorking = False
+#     else:
+#         socketio.emit("final_answer", "Agent is currently busy!")
 
 
 @app.route('/', methods=["GET"])
@@ -139,7 +137,7 @@ def index():
 
 @app.route('/get_response', methods=['POST'])
 def greet():
-    return runner(request.json.get('query'))
+    return jsonify({'ans': runner(request.json.get('query'), socketio)})
 
 
 if __name__ == '__main__':
